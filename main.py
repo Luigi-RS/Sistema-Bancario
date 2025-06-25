@@ -1,5 +1,8 @@
+#MODULES
 import time
+import os
 
+#VARIABLES
 balance = 0.0
 deposit = 0.0
 extract = "EXTRACT".center(30, "#")
@@ -8,6 +11,29 @@ withdraw_limit = 500.0
 withdraw_count = 0
 WITHDRAW_LIMIT_COUNT = 3
 
+
+#FUNCTIONS
+def deposit(balance, extract,/):
+    deposit_amount = input("   Enter deposit amount: ")
+    try:
+        deposit_amount = float(deposit_amount)
+        while deposit_amount <= 0:
+            print("\n" + "Deposit amount must be positive.".center(30) + "\n")
+            deposit_amount = input("   Enter deposit amount: ")
+            deposit_amount = float(deposit_amount)
+        balance += deposit_amount
+        print(f"Deposited: R${deposit_amount:.2f}. New balance: R${balance:.2f}")
+        extract += f"\nDeposit: R${deposit_amount:.2f}"
+    except ValueError:
+        print("\n" + "Invalid input. Please enter a valid number.".center(30) + "\n")
+    return balance, extract
+
+
+
+def clear_terminal():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+#MAIN PROGRAM
 while True:
     menu = f'''
     #####[MENU]#####
@@ -18,22 +44,12 @@ while True:
     [5] Exit
 
     Select an option: '''
-    option = input(menu)
+    option = input(menu).strip()
+    clear_terminal()
     
     if option == '1':
         print("\n"+"Entering Deposit function.".center(30)+"\n")
-        deposit = input("   Enter deposit amount: ")
-        try:
-            deposit = float(deposit)
-            while deposit <= 0:
-                print("\n" + "Deposit amount must be positive.".center(30) + "\n")
-                deposit = input("   Enter deposit amount: ")
-                deposit = float(deposit)
-            balance += deposit
-            print(f"Deposited: R${deposit:.2f}. New balance: R${balance:.2f}")
-            extract += f"\nDeposit: R${deposit:.2f}"
-        except ValueError:
-            print("\n" + "Invalid input. Please enter a valid number.".center(30) + "\n")
+        balance, extract = deposit(balance, extract)
     elif option == '2':
         print("\n"+"Entering Withdraw function.".center(30)+"\n")
         if withdraw_count < WITHDRAW_LIMIT_COUNT:
@@ -71,8 +87,10 @@ while True:
     elif option == '5':
         print("\n"+"Exiting the menu. Goodbye!".center(30)+"\n")
         time.sleep(1)
+        clear_terminal()
         break
     else:
         print("\n" + "Invalid option, please try again.".center(30) + "\n")
     
     time.sleep(1.5)
+    clear_terminal()
